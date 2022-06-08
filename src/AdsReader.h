@@ -12,10 +12,12 @@ private:
         double voltage;
         double percent;
     };
-    Adafruit_ADS1115 ads;
+    Adafruit_ADS1115 *ads;
+    uint8_t address;
 
 public:
     AdsReader(uint8_t addr);
+    void begin();
     SensorData readValue(int pin);
 };
 

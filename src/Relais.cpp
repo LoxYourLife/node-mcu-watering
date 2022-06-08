@@ -2,57 +2,32 @@
 
 Relais::Relais()
 {
-    PCF = new PCF8574(0x20);
+    mcp = new Adafruit_MCP23017();
 }
 
 void Relais::begin()
 {
-    Serial.print("Connecting to PCF8574 ... ");
-    if (!PCF->begin(LOW))
+    mcp->begin();
+    for (uint8_t pin : pins)
     {
-        Serial.print("Initialization Failure ");
-    }
-
-    if (!PCF->isConnected())
-    {
-        Serial.println("=> connection failed");
-    }
-    else
-    {
-        Serial.println("=> connected");
+        mcp->pinMode(pin, OUTPUT);
+        mcp->digitalWrite(pin, HIGH);
+        mcp->pullUp(pin, HIGH);
     }
 }
 
 void Relais::open(int relais)
 {
-    if (PCF->isConnected())
-    {
-        Serial.print("Openeing relais ");
-        Serial.println(relais);
-        int pin = relais - 1; // convert 1-8 to 0-7
-        PCF->write(pin, HIGH);
-    }
-    else
-    {
-        Serial.print("Connot open relais ");
-        Serial.print(relais);
-        Serial.println(" because PCF is not connected");
-    }
+    Serial.print("Openeing relais ");
+    Serial.println(relais);
+    int pin = relais - 1; // convert 1-8 to 0-7
+    mcp->digitalWrite(pin, LOW);
 }
 
 void Relais::close(int relais)
 {
-    if (PCF->isConnected())
-    {
-        Serial.print("Closing relais ");
-        Serial.println(relais);
-        int pin = relais - 1; // convert 1-8 to 0-7
-        PCF->write(pin, LOW);
-    }
-    else
-    {
-        Serial.print("Connot open relais ");
-        Serial.print(relais);
-        Serial.println(" because PCF is not connected");
-    }
+    Serial.print("Closing relais ");
+    Serial.println(relais);
+    int pin = relais - 1; // convert 1-8 to 0-7
+    mcp->digitalWrite(pin, HIGH);
 }

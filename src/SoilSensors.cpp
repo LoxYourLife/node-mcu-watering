@@ -3,8 +3,12 @@
 SoilSensors::SoilSensors(Mqtt *mqttClient)
 {
     mqtt = mqttClient;
-    adsr1 = new AdsReader(ADS1115_ADDRESS_1);
-    adsr2 = new AdsReader(ADS1115_ADDRESS_2);
+}
+
+void SoilSensors::begin()
+{
+    adsr1->begin();
+    adsr2->begin();
 }
 
 void SoilSensors::readData()

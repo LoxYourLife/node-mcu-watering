@@ -12,8 +12,8 @@
 class SoilSensors
 {
 private:
-    AdsReader *adsr1;
-    AdsReader *adsr2;
+    AdsReader *adsr1 = new AdsReader(ADS1115_ADDRESS_1);
+    AdsReader *adsr2 = new AdsReader(ADS1115_ADDRESS_2);
     Mqtt *mqtt;
     unsigned long lastMeasurement = 0;
     const unsigned long interval = 60000;
@@ -38,5 +38,6 @@ private:
 public:
     SoilSensors(Mqtt *mqttClient);
     void readData();
+    void begin();
 };
 #endif

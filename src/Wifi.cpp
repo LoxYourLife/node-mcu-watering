@@ -1,7 +1,7 @@
 #include <Wifi.h>
 
-#define WIFI_SSID "Tor zur Welt"
-#define WIFI_PASSWORD "nopote#5?22417"
+#define WIFI_SSID "SSID"
+#define WIFI_PASSWORD "password"
 
 void Wifi::connect()
 {
@@ -13,7 +13,7 @@ void Wifi::connect()
         Serial.print("Verbinde mich mit Netz: ");
         Serial.println(WIFI_SSID);
 
-        WiFi.hostname("Soil-Sensors");
+        WiFi.hostname("ESP8266-Watering");
         WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
         while (WiFi.status() != WL_CONNECTED)
@@ -26,5 +26,12 @@ void Wifi::connect()
         Serial.println("WiFi Verbindung aufgebaut");
         Serial.print("Eigene IP des ESP-Modul: ");
         Serial.println(WiFi.localIP());
+    }
+    else
+    {
+        Serial.println(WIFI_SSID);
+        Serial.println(WiFi.status());
+        Serial.println(WiFi.localIP());
+        Serial.println("Seems like wifi is already connected :O");
     }
 }

@@ -13,8 +13,12 @@ private:
     PubSubClient *client;
     Relais *relaisController;
 
-    char *sensorTopic = (char *)"soilSensors_test";
-    char *relaisTopic = (char *)"wateringRelais/#";
+    const char *clientName = (char *)"Soil_Sensor";
+    const char *sensorTopic = (char *)"soilSensors";
+    const char *relaisTopic = (char *)"wateringRelais/#";
+    const char *fillingLevelDistanceTopic = (char *)"TankFillingLevel/distance";
+    const char *fillingLevelpercentTopic = (char *)"TankFillingLevel/percent";
+
     void callback(char *topicChar, byte *payload, unsigned int length);
 
 public:
@@ -24,6 +28,8 @@ public:
     void loop();
     void sendPercentage(char *name, double value);
     void sendVoltage(char *name, double value);
+    void sendFillingLevel(double distance, double percent);
 };
 
 #endif
+

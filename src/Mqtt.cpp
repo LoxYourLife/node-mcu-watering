@@ -1,9 +1,9 @@
 #include <Mqtt.h>
 
-IPAddress MQTT_BROKER(192, 168, 1, 104);
+IPAddress MQTT_BROKER(10, 10, 1, 4);
 const uint16_t MQTT_PORT = 1883;
 const char *MQTT_USER = "loxberry";
-const char *MQTT_PASS = "MZoXp114eGnusnMt";
+const char *MQTT_PASS = "password";
 unsigned long previousMillis = 0;
 unsigned long interval = 2000;
 
@@ -26,13 +26,14 @@ void Mqtt::connect()
         Serial.print("Connecting to Mqtt Broker ... ");
         while (!client->connected())
         {
-            if (client->connect("Soil_Sensor", MQTT_USER, MQTT_PASS))
+            if (client->connect(clientName, MQTT_USER, MQTT_PASS))
             {
                 Serial.println("Connection established");
                 delay(100);
                 client->subscribe(relaisTopic);
                 client->setKeepAlive(30);
                 client->setSocketTimeout(40);
+                return;
             }
             else
             {
@@ -66,6 +67,15 @@ void Mqtt::sendVoltage(char *name, double voltage)
     sprintf(value, "%4.2f", round(voltage));
     client->publish(topic, value);
 }
+void Mqtt::sendFillingLevel(double distance, double percent)
+{
+    char distanceValue[10];
+    sprintf(distanceValue, "%4.2f", distance);
+    char percentValue[10];
+    sprintf(percentValue, "%2.2f", percent);
+    client->publish(fillingLevelDistanceTopic, distanceValue);
+    client->publish(fillingLevelpercentTopic, percentValue);
+}
 
 void Mqtt::callback(char *topicChar, byte *payload, unsigned int length)
 {
@@ -88,5 +98,9 @@ void Mqtt::callback(char *topicChar, byte *payload, unsigned int length)
     if (message == "on")
     {
         relaisController->open(relaisNumber);
+    }
+    else
+    {
+        relaisController->close(relaisNumber);
     }
 }
